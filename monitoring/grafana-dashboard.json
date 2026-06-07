@@ -1,0 +1,37 @@
+{
+  "dashboard": {
+    "title": "FollowThrough",
+    "panels": [
+      {
+        "title": "Extraction Requests (Total)",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0},
+        "targets": [{"expr": "extraction_requests_total", "legendFormat": "Total"}],
+        "datasource": "Prometheus"
+      },
+      {
+        "title": "Extraction Latency (p95)",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0},
+        "targets": [{"expr": "histogram_quantile(0.95, rate(extraction_latency_seconds_bucket[5m]))", "legendFormat": "p95"}],
+        "datasource": "Prometheus"
+      },
+      {
+        "title": "Overdue Action Items",
+        "type": "gauge",
+        "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0},
+        "targets": [{"expr": "action_items_overdue_total", "legendFormat": "Overdue"}],
+        "datasource": "Prometheus"
+      },
+      {
+        "title": "Kafka Events Published",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0},
+        "targets": [{"expr": "rate(kafka_events_published_total[5m])", "legendFormat": "{{event_type}}"}],
+        "datasource": "Prometheus"
+      }
+    ],
+    "time": {"from": "now-1h", "to": "now"},
+    "refresh": "10s"
+  }
+}
