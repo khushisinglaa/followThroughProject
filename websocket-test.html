@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MeetingOS — Live Events</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <style>
+        body { font-family: monospace; background: #1a1a2e; color: #eee; padding: 20px; }
+        h1 { color: #0f3460; }
+        .event { padding: 8px; margin: 4px 0; border-radius: 4px; }
+        .decision { background: #16213e; border-left: 4px solid #4fc3f7; }
+        .action { background: #1a1a2e; border-left: 4px solid #66bb6a; }
+        .overdue { background: #2d1b1b; border-left: 4px solid #ef5350; }
+        #status { padding: 6px 12px; border-radius: 4px; display: inline-block; }
+        .connected { background: #1b5e20; }
+        .disconnected { background: #b71c1c; }
+    </style>
+</head>
+<body>
+    <h1>📡 MeetingOS Live Events</h1>
+    <div id="status" class="disconnected">Disconnected</div>
+    <div id="events"></div>
+
+    <script>
+        const eventsDiv = document.getElementById('events');
+        const statusDiv = document.getElementById('status');
+
+        const socket = new SockJS('http://localhost:8081/ws');
+        const stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function () {
+            statusDiv.textContent = 'Connected';
+            statusDiv.className = 'connected';
+
+            stompClient.subscribe('/topic/decisions', function (msg) {
+                addEvent('decision', JSON.parse(msg.body));
+            });
+            stompClient.subscribe('/topic/actions', function (msg) {
+                addEvent('action', JSON.parse(msg.body));
+            });
+            stompClient.subscribe('/topic/overdue', function (msg) {
+                addEvent('overdue', JSON.parse(msg.body));
+            });
+        }, function () {
+            statusDiv.textContent = 'Disconnected';
+            statusDiv.className = 'disconnected';
+        });
+
+        function addEvent(type, event) {
+            const div = document.createElement('div');
+            div.className = 'event ' + type;
+            const time = new Date().toLocaleTimeString();
+            div.innerHTML = `<strong>[${time}] ${event.eventType}</strong> — ${JSON.stringify(event.payload)}`;
+            eventsDiv.prepend(div);
+        }
+    </script>
+</body>
+</html>
