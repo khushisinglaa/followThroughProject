@@ -1,0 +1,18 @@
+# Build
+target/
+notification-service/target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+
+# Env / Secrets
+.env
+*.env
+
+# Logs
+*.log
