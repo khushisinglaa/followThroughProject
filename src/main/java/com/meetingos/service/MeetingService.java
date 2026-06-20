@@ -5,10 +5,11 @@ import com.meetingos.dto.MeetingResponse;
 import com.meetingos.entity.Meeting;
 import com.meetingos.repository.MeetingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -36,8 +37,8 @@ public class MeetingService {
     }
 
     @Transactional(readOnly = true)
-    public List<MeetingResponse> getAll() {
-        return meetingRepository.findAll().stream().map(this::toResponse).toList();
+    public Page<MeetingResponse> getAll(Pageable pageable) {
+        return meetingRepository.findAll(pageable).map(this::toResponse);
     }
 
     private MeetingResponse toResponse(Meeting m) {

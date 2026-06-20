@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +45,20 @@ public class ActionItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<ActionItemResponse> getAll() {
-        return actionItemRepository.findAll().stream().map(this::toResponse).toList();
+    public Page<ActionItemResponse> getAll(Pageable pageable) {
+        return actionItemRepository.findAll(pageable).map(this::toResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public ActionItemResponse getById(UUID id) {
+        return actionItemRepository.findById(id)
+                .map(this::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("ActionItem", id));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ActionItemResponse> getByMeetingId(UUID meetingId) {
+        return actionItemRepository.findByMeetingId(meetingId).stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)

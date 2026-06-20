@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,9 +52,14 @@ public class DecisionService {
 
     @Transactional(readOnly = true)
     @Cacheable(value = "decisions")
-    public List<DecisionResponse> getAll() {
-        log.info("Cache MISS: loading all decisions from DB");
-        return decisionRepository.findAll().stream().map(this::toResponse).toList();
+    public Page<DecisionResponse> getAll(Pageable pageable) {
+        log.info("Cache MISS: loading decisions from DB");
+        return decisionRepository.findAll(pageable).map(this::toResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public List<DecisionResponse> getByMeetingId(UUID meetingId) {
+        return decisionRepository.findByMeetingId(meetingId).stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)

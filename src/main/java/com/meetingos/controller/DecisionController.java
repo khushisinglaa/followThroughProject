@@ -5,6 +5,9 @@ import com.meetingos.dto.DecisionResponse;
 import com.meetingos.service.DecisionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +33,13 @@ public class DecisionController {
     }
 
     @GetMapping
-    public List<DecisionResponse> getAll() {
-        return decisionService.getAll();
+    public Page<DecisionResponse> getAll(@PageableDefault(size = 20) Pageable pageable) {
+        return decisionService.getAll(pageable);
+    }
+
+    @GetMapping("/meeting/{meetingId}")
+    public List<DecisionResponse> getByMeetingId(@PathVariable UUID meetingId) {
+        return decisionService.getByMeetingId(meetingId);
     }
 
     @GetMapping("/search")

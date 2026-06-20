@@ -7,10 +7,12 @@ import com.meetingos.service.ExtractionService;
 import com.meetingos.service.MeetingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -33,8 +35,8 @@ public class MeetingController {
     }
 
     @GetMapping
-    public List<MeetingResponse> getAll() {
-        return meetingService.getAll();
+    public Page<MeetingResponse> getAll(@PageableDefault(size = 20) Pageable pageable) {
+        return meetingService.getAll(pageable);
     }
 
     @PostMapping("/{id}/extract")
