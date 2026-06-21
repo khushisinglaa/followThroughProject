@@ -1,5 +1,7 @@
 package com.meetingos.service;
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meetingos.config.MetricsConfig;
@@ -59,7 +61,7 @@ public class ExtractionService {
             Decision decision = Decision.builder()
                     .meetingId(meetingId)
                     .title(d.getTitle())
-                    .reason(d.getReason())
+                    .reason(d.getReasonAsString())
                     .alternatives(d.getAlternatives())
                     .tradeoffs(d.getTradeoffs())
                     .owner(d.getOwner())
@@ -192,21 +194,29 @@ public class ExtractionService {
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ExtractionResult {
         private List<DecisionData> decisions;
         @JsonProperty("action_items")
         private List<ActionItemData> actionItems;
 
         @Data
+        @JsonIgnoreProperties(ignoreUnknown = true)
         public static class DecisionData {
             private String title;
-            private String reason;
+            private Object reason;
             private List<String> alternatives;
             private List<String> tradeoffs;
             private String owner;
+
+            public String getReasonAsString() {
+                if (reason == null) return null;
+                return reason instanceof String ? (String) reason : reason.toString();
+            }
         }
 
         @Data
+        @JsonIgnoreProperties(ignoreUnknown = true)
         public static class ActionItemData {
             private String task;
             @JsonProperty("assigned_to")
