@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { getAllDecisions, searchDecisions } from '../api/decisions';
 import { useDebounce } from '../hooks/useDebounce';
+import { useTitle } from '../hooks/useTitle';
 
 const statusColors = {
   PROPOSED: 'bg-gray-100 text-gray-700',
@@ -94,6 +95,7 @@ function DecisionCard({ decision }) {
 }
 
 export default function Decisions() {
+  useTitle('Decisions');
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search);
   const navigate = useNavigate();

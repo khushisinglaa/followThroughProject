@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createMeeting, extractMeeting } from '../api/meetings';
+import { useTitle } from '../hooks/useTitle';
 
 const loadingMessages = [
   'Reading your meeting...',
@@ -13,10 +14,11 @@ export default function Upload() {
   const [title, setTitle] = useState('');
   const [participants, setParticipants] = useState('');
   const [transcript, setTranscript] = useState('');
-  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [status, setStatus] = useState('idle');
   const [result, setResult] = useState(null);
   const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
   const navigate = useNavigate();
+  useTitle('Upload');
 
   useEffect(() => {
     if (status !== 'loading') return;
@@ -39,7 +41,8 @@ export default function Upload() {
       const extraction = await extractMeeting(meeting.id);
       setResult(extraction);
       setStatus('success');
-    } catch {
+    } catch (err) {
+      console.error('[Upload] Failed:', err.response?.data || err.message);
       setStatus('error');
     }
   };

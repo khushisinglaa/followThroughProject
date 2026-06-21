@@ -5,3 +5,5 @@ export const getAllActionItems = (page = 0) => client.get('/api/action-items', {
 export const getOverdueActionItems = () => client.get('/api/action-items/overdue').then((r) => r.data);
 
 export const updateStatus = (id, status) => client.patch(`/api/action-items/${id}/status`, { status }).then((r) => r.data);
+
+export const getActionItemsByMeeting = (meetingId) => client.get(`/api/action-items/meeting/${meetingId}`).then((r) => r.data);
