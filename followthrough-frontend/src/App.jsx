@@ -1,9 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import Upload from './pages/Upload';
 
-function Upload() {
-  return <h1 className="text-2xl font-bold">Upload Meeting</h1>;
-}
 function Decisions() {
   return <h1 className="text-2xl font-bold">Decisions</h1>;
 }
