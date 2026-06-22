@@ -111,6 +111,8 @@ public class ExtractionService {
         return """
                 Analyze this meeting transcript and extract decisions and action items.
                 
+                IMPORTANT: Keep ALL string values SHORT. Max 15 words per field. Be concise.
+                
                 IMPORTANT DISTINCTIONS:
                 - A DECISION is a finalized choice between alternatives. It requires that options were considered and one was chosen.
                 - An ACTION ITEM is a task assigned to someone. Do NOT classify action items as decisions.
@@ -124,10 +126,10 @@ public class ExtractionService {
                   "decisions": [
                     {
                       "title": "short decision title",
-                      "reason": "why this was decided",
-                      "alternatives": ["other options that were considered"],
-                      "tradeoffs": ["tradeoffs discussed"],
-                      "owner": "person who owns this decision"
+                      "reason": "one sentence why",
+                      "alternatives": ["option1", "option2"],
+                      "tradeoffs": ["short tradeoff"],
+                      "owner": "person name"
                     }
                   ],
                   "action_items": [
